@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -53,8 +54,19 @@ class ProductController extends Controller
             'deskripsi'   => $request->deskripsi,
         ];
 
+        // Proses Upload Gambar ke public/images/
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('products', 'public');
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Pastikan folder public/images ada
+            $destinationPath = public_path('images');
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true, true);
+            }
+            
+            $file->move($destinationPath, $filename);
+            $data['gambar'] = $filename;
         }
 
         Product::create($data);
@@ -84,8 +96,24 @@ class ProductController extends Controller
             'deskripsi'   => $request->deskripsi,
         ];
 
+        // Proses Upload Gambar Baru (Jika diisi)
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('products', 'public');
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            $destinationPath = public_path('images');
+            if (!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, 0755, true, true);
+            }
+            
+            $file->move($destinationPath, $filename);
+            
+            // Hapus gambar lama jika ada (opsional, agar storage tidak penuh)
+            if ($product->gambar && File::exists(public_path('images/' . $product->gambar))) {
+                File::delete(public_path('images/' . $product->gambar));
+            }
+
+            $data['gambar'] = $filename;
         }
 
         $product->update($data);
@@ -96,6 +124,11 @@ class ProductController extends Controller
     // Halaman Admin: Hapus produk
     public function destroy(Product $product)
     {
+        // Hapus file gambar fisik dari folder public/images
+        if ($product->gambar && File::exists(public_path('images/' . $product->gambar))) {
+            File::delete(public_path('images/' . $product->gambar));
+        }
+
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus.');
     }

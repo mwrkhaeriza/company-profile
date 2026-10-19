@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.products.update', $product->id) }}" method="POST">
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -40,11 +40,14 @@
                     <input type="number" class="form-control" name="harga" value="{{ old('harga', $product->harga) }}">
                 </div>
 
-                <!-- Input Nama File Gambar (Sesuai folder public/images/) -->
+                <!-- Input Upload File Gambar Baru -->
                 <div class="mb-3">
-                    <label class="form-label fw-bold small text-secondary">Nama File Gambar (di folder public/images/)</label>
-                    <input type="text" class="form-control" name="gambar" placeholder="Contoh: produk1.jpg" required value="{{ old('gambar', $product->gambar) }}">
-                    <small class="text-muted">Gambar saat ini: <strong>{{ $product->gambar }}</strong> (Pastikan file ada di folder <code>public/images/</code>)</small>
+                    <label class="form-label fw-bold small text-secondary">Pilih Gambar Baru (Opsional)</label>
+                    <input type="file" class="form-control" name="gambar" accept="image/*">
+                    <small class="text-muted mt-1 d-block">
+                        Gambar saat ini: <strong>{{ $product->gambar }}</strong> <br>
+                        <em>(Kosongkan jika tidak ingin mengganti gambar produk)</em>
+                    </small>
                 </div>
 
                 <div class="mb-3">
