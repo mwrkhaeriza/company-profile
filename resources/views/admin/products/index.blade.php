@@ -80,7 +80,11 @@
                                         <td class="ps-4 fw-bold text-secondary">{{ $index + 1 }}</td>
                                         <td>
                                             @if($product->gambar)
-                                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                @if(Str::startsWith($product->gambar, 'products/'))
+                                                    <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                @else
+                                                    <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                @endif
                                             @else
                                                 <span class="badge bg-secondary">Tidak ada foto</span>
                                             @endif
