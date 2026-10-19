@@ -80,10 +80,18 @@
                                         <td class="ps-4 fw-bold text-secondary">{{ $index + 1 }}</td>
                                         <td>
                                             @if($product->gambar)
-                                                @if(Str::startsWith($product->gambar, 'products/'))
-                                                    <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                @php
+                                                    $imagePath = 'images/' . $product->gambar;
+                                                    $storagePath = 'storage/' . $product->gambar;
+                                                @endphp
+
+                                                @if(file_exists(public_path($imagePath)))
+                                                    <img src="{{ asset($imagePath) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                @elseif(\Illuminate\Support\Str::startsWith($product->gambar, 'products/') || file_exists(public_path($storagePath)))
+                                                    <img src="{{ asset($storagePath) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
                                                 @else
-                                                    <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                                    {{-- Fallback jika file foto fisik belum dipindahkan --}}
+                                                    <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" class="img-thumbnail shadow-sm" style="width: 90px; height: 60px; object-fit: cover; border-radius: 8px;" onerror="this.onerror=null; this.src='https://via.placeholder.com/90x60?text=No+Image';">
                                                 @endif
                                             @else
                                                 <span class="badge bg-secondary">Tidak ada foto</span>
