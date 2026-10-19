@@ -100,7 +100,7 @@
                                         </td>
                                     </tr>
 
-                                    <!-- Modal Balas Pesan (Menggunakan mailto) -->
+                                    <!-- Modal Balas Pesan -->
                                     <div class="modal fade" id="balasModal{{ $contact->id }}" tabindex="-1" aria-labelledby="balasModalLabel{{ $contact->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -108,28 +108,26 @@
                                                     <h5 class="modal-title" id="balasModalLabel{{ $contact->id }}">Balas Pesan ke {{ $contact->nama }}</h5>
                                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="mailto:{{ $contact->email }}" method="GET" enctype="text/plain">
-                                                    <div class="modal-body text-start">
-                                                        <div class="mb-3">
-                                                            <label class="form-label text-muted small">Kepada Email:</label>
-                                                            <input type="text" class="form-control" value="{{ $contact->email }}" readonly>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label text-muted small">Pesan dari Pengunjung:</label>
-                                                            <textarea class="form-control bg-light" rows="2" readonly>{{ $contact->pesan }}</textarea>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">Tulis Balasan:</label>
-                                                            <textarea name="body" class="form-control" rows="4" placeholder="Tulis tanggapan atau balasan di sini..." required></textarea>
-                                                        </div>
+                                                <div class="modal-body text-start">
+                                                    <div class="mb-3">
+                                                        <label class="form-label text-muted small">Kepada Email:</label>
+                                                        <input type="text" class="form-control" value="{{ $contact->email }}" id="emailDest{{ $contact->id }}" readonly>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                                                        <button type="submit" class="btn btn-success btn-sm fw-bold">
-                                                            <i class="bi bi-send-fill me-1"></i> Kirim via Aplikasi Email
-                                                        </button>
+                                                    <div class="mb-3">
+                                                        <label class="form-label text-muted small">Pesan dari Pengunjung:</label>
+                                                        <textarea class="form-control bg-light" rows="2" readonly>{{ $contact->pesan }}</textarea>
                                                     </div>
-                                                </form>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-bold">Tulis Balasan:</label>
+                                                        <textarea id="replyBody{{ $contact->id }}" class="form-control" rows="4" placeholder="Tulis tanggapan atau balasan di sini..."></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                                                    <button type="button" onclick="kirimEmail('{{ $contact->email }}', '{{ $contact->id }}')" class="btn btn-success btn-sm fw-bold">
+                                                        <i class="bi bi-send-fill me-1"></i> Kirim via Aplikasi Email
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -151,5 +149,19 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function kirimEmail(email, id) {
+            var bodyText = document.getElementById('replyBody' + id).value;
+            if(!bodyText.trim()) {
+                alert('Tulis balasan terlebih dahulu!');
+                return;
+            }
+            var subject = encodeURIComponent('Balasan Pesan dari PT Solusi Koneksi Anda');
+            var body = encodeURIComponent(bodyText);
+            
+            // Membuka email client bawaan OS / Browser
+            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+        }
+    </script>
 </body>
 </html>
