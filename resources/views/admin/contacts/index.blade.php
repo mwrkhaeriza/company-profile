@@ -125,11 +125,11 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                                                     <a id="btnSend{{ $contact->id }}" 
-                                                       href="mailto:{{ $contact->email }}?subject=Balasan%20Pesan%20PT%20Solusi%20Koneksi%20Anda&body=" 
+                                                       href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $contact->email }}&su=Balasan%20Pesan%20PT%20Solusi%20Koneksi%20Anda&body=" 
                                                        target="_blank" 
-                                                       onclick="updateMailLink('{{ $contact->id }}', '{{ $contact->email }}')" 
+                                                       onclick="updateGmailLink('{{ $contact->id }}', '{{ $contact->email }}')" 
                                                        class="btn btn-success btn-sm fw-bold px-3">
-                                                        <i class="bi bi-send-fill me-1"></i> Kirim via Aplikasi Email
+                                                        <i class="bi bi-envelope-at-fill me-1"></i> Kirim via Gmail Web
                                                     </a>
                                                 </div>
                                             </div>
@@ -154,12 +154,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function updateMailLink(id, email) {
+        function updateGmailLink(id, email) {
             var text = document.getElementById('replyText' + id).value;
             var btn = document.getElementById('btnSend' + id);
             var subject = encodeURIComponent('Balasan Pesan PT Solusi Koneksi Anda');
             var body = encodeURIComponent(text);
-            btn.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+            
+            // Mengarahkan ke pembuatan pesan baru di Gmail Web
+            btn.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + email + '&su=' + subject + '&body=' + body;
         }
     </script>
 </body>
