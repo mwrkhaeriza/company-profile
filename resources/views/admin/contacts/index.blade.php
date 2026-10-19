@@ -108,7 +108,8 @@
                                                     <h5 class="modal-title" id="balasModalLabel{{ $contact->id }}">Balas Pesan ke {{ $contact->nama }}</h5>
                                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="mailto:{{ $contact->email }}" method="GET" enctype="text/plain">
+                                                <form action="{{ route('admin.contacts.reply', $contact->id) }}" method="POST">
+                                                    @csrf
                                                     <div class="modal-body text-start">
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Kepada Email:</label>
@@ -125,7 +126,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                                                        <button type="submit" class="btn btn-success btn-sm fw-bold">Kirim via Email</button>
+                                                        <button type="submit" class="btn btn-success btn-sm fw-bold">Kirim Balasan</button>
                                                     </div>
                                                 </form>
                                             </div>
