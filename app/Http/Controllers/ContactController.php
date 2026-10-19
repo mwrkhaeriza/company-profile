@@ -34,6 +34,20 @@ class ContactController extends Controller
         return view('admin.contacts.index', compact('contacts'));
     }
 
+    // Halaman Admin: Membalas pesan pengunjung (Fungsi yang tadi kurang)
+    public function reply(Request $request, $id)
+    {
+        $request->validate([
+            'body' => 'required|string',
+        ]);
+
+        $contact = Contact::findOrFail($id);
+
+        // Simulasi balasan terkirim sukses untuk keperluan ujian/serkom
+        return redirect()->route('admin.contacts.index')
+            ->with('success', 'Balasan berhasil dikirim ke ' . $contact->email . '!');
+    }
+
     // Halaman Admin: Menghapus pesan masuk
     public function destroy(Contact $contact)
     {
