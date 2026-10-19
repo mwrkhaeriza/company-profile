@@ -15,7 +15,19 @@
             <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
                 @if($product->gambar)
                     <div style="height: 200px; overflow: hidden; background-color: #f8f9fa;">
-                        <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @php
+                            $pathImages = 'images/' . $product->gambar;
+                            $pathStorage = 'storage/' . $product->gambar;
+                        @endphp
+
+                        @if(file_exists(public_path($pathImages)))
+                            <img src="{{ asset($pathImages) }}" alt="{{ $product->nama_produk }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @elseif(\Illuminate\Support\Str::startsWith($product->gambar, 'products/') || file_exists(public_path($pathStorage)))
+                            <img src="{{ asset($pathStorage) }}" alt="{{ $product->nama_produk }}" class="w-100 h-100" style="object-fit: cover;">
+                        @else
+                            {{-- Fallback default ke folder public/images/ --}}
+                            <img src="{{ asset('images/' . $product->gambar) }}" alt="{{ $product->nama_produk }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Gambar+Tidak+Ada';">
+                        @endif
                     </div>
                 @else
                     <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
