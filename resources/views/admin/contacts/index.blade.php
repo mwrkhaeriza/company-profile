@@ -84,7 +84,7 @@
                                             <span class="text-dark">{{ $contact->pesan }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <!-- Tombol Balas yang memicu Modal -->
+                                            <!-- Tombol Balas Modal -->
                                             <button type="button" class="btn btn-sm btn-success fw-bold px-3 me-1" data-bs-toggle="modal" data-bs-target="#balasModal{{ $contact->id }}" style="border-radius: 6px;">
                                                 <i class="bi bi-envelope-fill me-1"></i> Balas
                                             </button>
@@ -101,32 +101,36 @@
                                     </tr>
 
                                     <!-- Modal Balas Pesan -->
-                                    <div class="modal fade" id="balasModal{{ $contact->id }}" tabindex="-1" aria-labelledby="balasModalLabel{{ $contact->id }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
+                                    <div class="modal fade" id="balasModal{{ $contact->id }}" tabindex="-1" aria-labelledby="balasModalLabel{{ $contact->id }}" aria-hidden="true" data-bs-backdrop="static">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow">
                                                 <div class="modal-header bg-dark text-white">
-                                                    <h5 class="modal-title" id="balasModalLabel{{ $contact->id }}">Balas Pesan ke {{ $contact->nama }}</h5>
+                                                    <h5 class="modal-title fs-6 fw-bold" id="balasModalLabel{{ $contact->id }}">Balas Pesan ke {{ $contact->nama }}</h5>
                                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body text-start">
                                                     <div class="mb-3">
-                                                        <label class="form-label text-muted small">Kepada Email:</label>
-                                                        <input type="text" class="form-control" value="{{ $contact->email }}" id="emailDest{{ $contact->id }}" readonly>
+                                                        <label class="form-label text-muted small fw-bold">Kepada Email:</label>
+                                                        <input type="text" class="form-control bg-light" value="{{ $contact->email }}" readonly>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label text-muted small">Pesan dari Pengunjung:</label>
+                                                        <label class="form-label text-muted small fw-bold">Pesan dari Pengunjung:</label>
                                                         <textarea class="form-control bg-light" rows="2" readonly>{{ $contact->pesan }}</textarea>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label fw-bold">Tulis Balasan:</label>
-                                                        <textarea id="replyBody{{ $contact->id }}" class="form-control" rows="4" placeholder="Tulis tanggapan atau balasan di sini..."></textarea>
+                                                        <textarea id="replyText{{ $contact->id }}" class="form-control" rows="4" placeholder="Tulis balasan di sini..."></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                                                    <button type="button" onclick="kirimEmail('{{ $contact->email }}', '{{ $contact->id }}')" class="btn btn-success btn-sm fw-bold">
+                                                    <a id="btnSend{{ $contact->id }}" 
+                                                       href="mailto:{{ $contact->email }}?subject=Balasan%20Pesan%20PT%20Solusi%20Koneksi%20Anda&body=" 
+                                                       target="_blank" 
+                                                       onclick="updateMailLink('{{ $contact->id }}', '{{ $contact->email }}')" 
+                                                       class="btn btn-success btn-sm fw-bold px-3">
                                                         <i class="bi bi-send-fill me-1"></i> Kirim via Aplikasi Email
-                                                    </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -150,17 +154,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function kirimEmail(email, id) {
-            var bodyText = document.getElementById('replyBody' + id).value;
-            if(!bodyText.trim()) {
-                alert('Tulis balasan terlebih dahulu!');
-                return;
-            }
-            var subject = encodeURIComponent('Balasan Pesan dari PT Solusi Koneksi Anda');
-            var body = encodeURIComponent(bodyText);
-            
-            // Membuka email client bawaan OS / Browser
-            window.location.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
+        function updateMailLink(id, email) {
+            var text = document.getElementById('replyText' + id).value;
+            var btn = document.getElementById('btnSend' + id);
+            var subject = encodeURIComponent('Balasan Pesan PT Solusi Koneksi Anda');
+            var body = encodeURIComponent(text);
+            btn.href = 'mailto:' + email + '?subject=' + subject + '&body=' + body;
         }
     </script>
 </body>
